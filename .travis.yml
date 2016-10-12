@@ -10,7 +10,7 @@ services:
 
 install:
     - docker build -t marcossegovia/mywins .
-    - docker run -d -P --name app app
+    - docker run -d -P --name app marcossegovia/mywins
 
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
