@@ -9,7 +9,7 @@ services:
     -  docker
 
 install:
-    - docker build -t marcossegovia/mywins
+    - docker build -t marcossegovia/mywins .
     - docker run -d -P --name app app
 
 after_success:
