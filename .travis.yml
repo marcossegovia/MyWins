@@ -10,8 +10,8 @@ services:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    export REPO=MarcosSegovia/MyWins
+    export REPO_DOCKER_HUB=marcossegovia/mywins
     docker build -t marcossegovia/mywins .
     docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push REPO:0.$TRAVIS_BUILD_NUMBER;
+    docker push REPO_DOCKER_HUB:0.$TRAVIS_BUILD_NUMBER;
     fi
