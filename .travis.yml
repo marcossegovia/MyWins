@@ -3,15 +3,20 @@ sudo: required
 language: go
 
 go:
- - 1.7
+    - 1.7
 
 services:
- -  docker
+    -  docker
+
+install:
+    - docker build -t marcossegovia/mywins
+    - docker run -d -P --name app app
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    export REPO_DOCKER_HUB=marcossegovia/mywins
-    docker build -t marcossegovia/mywins .
-    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push REPO_DOCKER_HUB:0.$TRAVIS_BUILD_NUMBER;
-    fi
+    - if [ "$TRAVIS_BRANCH" == "master" ]; then
+        docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        docker push marcossegovia/mywins;
+        fi
+
+script:
+    - docker ps | grep -q app
