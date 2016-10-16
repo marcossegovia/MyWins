@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -15,9 +14,4 @@ func main() {
 
 		log.Fatal(e)
 	}
-
-}
-
-func Welcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome!!!")
 }

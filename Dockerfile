@@ -2,7 +2,7 @@ FROM golang:1.7-alpine
 
 RUN apk add --update git && rm -rf /var/cache/apk/*
 COPY . $GOPATH
-RUN go get github.com/gorilla/mux && \
+RUN go get ./... \
     go build src/*.go
 CMD $GOPATH/main
 

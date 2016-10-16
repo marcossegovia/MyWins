@@ -26,7 +26,9 @@ func NewRouter() *mux.Router {
 }
 
 var routes = Routes{
-	Route{"Get Wins", "GET", "/wins", Welcome},
-	Route{"Post Win", "POST", "/wins/add", Welcome},
+	Route{"Get Wins", "GET", "/wins", GetAllWins},
+	Route{"Get Wins", "GET", "/fails", GetAllFails},
+	Route{"Post Win", "POST", "/wins/add", AddWin},
+	Route{"Post Win", "POST", "/fails/add", AddFail},
 	Route{"Hi", "GET", "/", Welcome},
 }

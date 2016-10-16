@@ -1,10 +1,14 @@
 package domain
 
-import "time"
-
-type win struct{
-	Success bool `json:"success"`
-	Time time.Time `json:"time"`
+type win struct {
+	Success []string `json:"wins"`
+	Fails   []string `json:"defeats"`
 }
 
-type wins []win
+func (w *win) getSuccess() []string {
+	return w.Success
+}
+
+func (w *win) getFails() []string {
+	return w.Fails
+}
