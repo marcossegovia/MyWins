@@ -1,20 +1,13 @@
-FROM golang:1.7-alpine
+FROM alpine:latest
 
-RUN apk add --update git && rm -rf /var/cache/apk/*
+ENV GOPATH /go
 
-#Dependencies
-RUN go get github.com/gorilla/mux
-
-COPY . $GOPATH
-
-RUN go get -d -v github.com/MarcosSegovia/MyWins/src
-RUN go install github.com/MarcosSegovia/MyWins/src
-
-WORKDIR $GOPATH/src/github.com/MarcosSegovia/MyWins
-RUN go build -o mywins src/*.go
-
-CMD $GOPATH/mywins
+RUN apk add --update git go && \
+    git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
+    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
+    go get && go build -o /mywins &&\
+    apk del go git &&\
+    rm -fr /go
 
 EXPOSE 8080
-
-
+CMD ["/mywins"]
