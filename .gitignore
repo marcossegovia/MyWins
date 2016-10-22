@@ -1,4 +1,4 @@
 vendor/*/
 src/src
-files
+files/*
 bin

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"./winsa/domain"
+	"./wins/domain"
 )
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +44,7 @@ func AddWin(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	response_string := []string{"Win added =), Keep it up."};
+	response_string := []string{"Win added =), Keep it up."}
 	w.Write(buildResponse(response_string))
 }
 func AddFail(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +56,7 @@ func AddFail(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	response_string := []string{"Fail added =(, Sorry to hear that."};
+	response_string := []string{"Fail added =(, Sorry to hear that."}
 	w.Write(buildResponse(response_string))
 }
 
