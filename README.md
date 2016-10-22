@@ -11,7 +11,24 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 2. After you've already log in, you'll be asked to submit your success or your fail of the day.
 3. Keep your wins green!
 
-#How to build it locally
+##Installation
 
+You just `go get github.com/MarcosSegovia/MyWins` so you'll get the repository inside your go workspace.
+
+##How to build and run it locally
+
+1. Install dependencies:
+```
+go get github.com/gorilla/mux
+```
 1. `go build -o bin/mywins src/*.go`
+2. `./bin/mywins`
+3. MyWins will be running on 0.0.0.0:8080
+
+##How to build and run it with Docker locally
+
+1. First uncomment the `Local Development` Dockerfile code and comment the `Production/Staging` one.
+2. Build it by the provided Dockerfile `docker build -t marcossegovia/mywins .`
+3. Run it by executing `docker run -d -P marcossegovia/mywins`
+4. You will see how Docker will get a free port to expose the server: so run a `docker ps` and you'll see the app running on the 0.0.0.0:{port}
 
