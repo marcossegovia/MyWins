@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"./wins/domain"
+	"./winsa/domain"
 )
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
