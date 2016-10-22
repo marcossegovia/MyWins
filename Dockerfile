@@ -7,7 +7,7 @@ ENV GOPATH /go
 RUN apk add --update git go && \
     git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
     cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
-    go get && go build -o /mywins &&\
+    go get github.com/gorilla/mux && go build -o /mywins *.go &&\
     apk del go git &&\
     mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
     rm -rf /go
