@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/MarcosSegovia/MyWins/src/Wins/Domain"
 	"net/http"
+	"./wins/domain"
 )
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +44,8 @@ func AddWin(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Win added =), Keep it up."))
+	response_string := []string{"Win added =), Keep it up."};
+	w.Write(buildResponse(response_string))
 }
 func AddFail(w http.ResponseWriter, r *http.Request) {
 	api := domain.NewApi()
@@ -55,7 +56,8 @@ func AddFail(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Fail added =(, Sorry to hear that."))
+	response_string := []string{"Fail added =(, Sorry to hear that."};
+	w.Write(buildResponse(response_string))
 }
 
 func buildResponse(slice_of_times []string) []byte {

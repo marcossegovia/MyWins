@@ -56,7 +56,7 @@ func (api *MyWinsAPI) AddFail() error {
 }
 
 func readFileToDomain() (*win, error) {
-	absPath, _ := filepath.Abs("../files/wins.json")
+	absPath, _ := filepath.Abs("files/wins.json")
 	jsonFile, err := os.Open(absPath)
 
 	if err != nil {
@@ -70,7 +70,6 @@ func readFileToDomain() (*win, error) {
 		log.Print("Error on parsing json file", err.Error())
 		return nil, err
 	}
-
 	return wins, nil
 }
 
@@ -79,7 +78,7 @@ func writeDomainToFile(w *win) error {
 	if err != nil {
 		return err
 	}
-	absPath, _ := filepath.Abs("../files/wins.json")
+	absPath, _ := filepath.Abs("files/wins.json")
 	err = ioutil.WriteFile(absPath, serialized_wins, 0644)
 	if err != nil {
 		log.Print("Could not write on the file", err.Error())
