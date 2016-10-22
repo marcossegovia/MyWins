@@ -4,10 +4,15 @@ FROM alpine:latest
 
 ENV GOPATH /go
 
-RUN apk add --update git go && \
+RUN apk add --update git go make && \
     git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
+    go get github.com/Masterminds/glide &&\
+    cd /go/src/github.com/Masterminds/glide &&\
+    make install &&\
+    cd /go/src/github.com/MarcosSegovia/MyWins &&\
+    glide install &&\
     cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
-    go get github.com/gorilla/mux && go build -o /mywins *.go &&\
+    go build -o /mywins *.go &&\
     apk del go git &&\
     mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
     rm -rf /go
@@ -23,11 +28,16 @@ CMD ["/mywins"]
 #
 #COPY . /go/src/github.com/MarcosSegovia/MyWins
 #
-#RUN apk add --update git go && \
+#RUN apk add --update git go make &&\
+#    go get github.com/Masterminds/glide &&\
+#    cd /go/src/github.com/Masterminds/glide &&\
+#    make install &&\
+#    cd /go/src/github.com/MarcosSegovia/MyWins &&\
+#    glide install &&\
 #    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
-#    go get github.com/gorilla/mux && go build -o /mywins *.go &&\
-#    apk del go git &&\
+#    go build -o /mywins *.go &&\
 #    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
+#    apk del go git &&\
 #    rm -rf /go
 #
 #EXPOSE 8080

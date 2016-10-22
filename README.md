@@ -13,14 +13,10 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 
 ##Installation
 
-You just `go get github.com/MarcosSegovia/MyWins` so you'll get the repository inside your go workspace.
+You just `go get github.com/MarcosSegovia/MyWins` so you'll get the repository inside your go workspace, be sure to get [glide](https://github.com/Masterminds/glide) to be able to get dependencies. If so, then run `glide install`
 
 ##How to build and run it locally
 
-1. Install dependencies:
-```
-go get github.com/gorilla/mux
-```
 1. `go build -o bin/mywins src/*.go`
 2. `./bin/mywins`
 3. MyWins will be running on 0.0.0.0:8080
