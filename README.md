@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/MarcosSegovia/MyWins.svg?branch=master)](https://travis-ci.org/MarcosSegovia/MyWins)
+[![Go Report Card](https://goreportcard.com/badge/github.com/MarcosSegovia/MyWins)](https://goreportcard.com/report/github.com/MarcosSegovia/MyWins)
 
 <p align="center">
 	<img alt="MyWins" src="logo.png?raw=true">
