@@ -17,6 +17,14 @@ RUN apk add --update git go make && \
     mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
     rm -rf /go
 
+ENV MONGO_HOST = localhost
+ENV MONGO_AUTH_DATABASE = mywins
+ENV MONGO_USER = mywinsAdmin
+ENV MONGO_PASS = winsPass
+ENV MONGO_MYWINS_DATABASE = mywins
+ENV MONGO_WINS_COLLECTION = wins
+ENV MONGO_FAILS_COLLECTION = fails
+
 EXPOSE 8080
 CMD ["/mywins"]
 

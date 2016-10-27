@@ -4,39 +4,62 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"./wins/domain"
+
+	"github.com/MarcosSegovia/MyWins/src/wins/domain"
+	"gopkg.in/mgo.v2"
 )
 
-func Welcome(w http.ResponseWriter, r *http.Request) {
+type apiHandlerFunc func(http.ResponseWriter, *http.Request, *domain.MyWinsAPI)
+
+//GeneralHandler is used to wrap all other handlers
+type GeneralHandler struct {
+	mongoDB     *mgo.Session
+	dbInfo      *domain.DBInfo
+	handlerFunc apiHandlerFunc
+}
+
+func newGeneralHandler(mongoDB *mgo.Session, dbInfo *domain.DBInfo, handler apiHandlerFunc) *GeneralHandler {
+	return &GeneralHandler{
+		mongoDB:     mongoDB,
+		dbInfo:      dbInfo,
+		handlerFunc: handler,
+	}
+}
+
+func (gh *GeneralHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	session := gh.mongoDB.Copy()
+	defer session.Close()
+	api := domain.NewApi(session, gh.dbInfo)
+	gh.handlerFunc(w, r, api)
+}
+
+func Welcome(w http.ResponseWriter, r *http.Request, api *domain.MyWinsAPI) {
 	fmt.Fprintln(w, "Welcome!!!")
 }
 
-func GetAllWins(w http.ResponseWriter, r *http.Request) {
-	api := domain.NewApi()
-	wins_response, err := api.FindAllWins()
+func GetAllWins(w http.ResponseWriter, r *http.Request, api *domain.MyWinsAPI) {
+	wins, err := api.FindAllWins()
 	if err != nil {
 		http.Error(w, domain.GeneralError, http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(buildResponse(wins_response.Success))
+	w.Write(buildResponse(wins))
 }
 
-func GetAllFails(w http.ResponseWriter, r *http.Request) {
-	api := domain.NewApi()
-	wins_response, err := api.FindAllWins()
+func GetAllFails(w http.ResponseWriter, r *http.Request, api *domain.MyWinsAPI) {
+	fails, err := api.FindAllFails()
 	if err != nil {
 		http.Error(w, domain.GeneralError, http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(buildResponse(wins_response.Fails))
+	w.Write(buildResponse(fails))
 }
 
-func AddWin(w http.ResponseWriter, r *http.Request) {
-	api := domain.NewApi()
+func AddWin(w http.ResponseWriter, r *http.Request, api *domain.MyWinsAPI) {
 	err := api.AddWin()
 	if err != nil {
 		http.Error(w, domain.GeneralError, http.StatusInternalServerError)
@@ -47,8 +70,7 @@ func AddWin(w http.ResponseWriter, r *http.Request) {
 	response_string := []string{"Win added =), Keep it up."}
 	w.Write(buildResponse(response_string))
 }
-func AddFail(w http.ResponseWriter, r *http.Request) {
-	api := domain.NewApi()
+func AddFail(w http.ResponseWriter, r *http.Request, api *domain.MyWinsAPI) {
 	err := api.AddFail()
 	if err != nil {
 		http.Error(w, domain.GeneralError, http.StatusInternalServerError)
@@ -60,11 +82,11 @@ func AddFail(w http.ResponseWriter, r *http.Request) {
 	w.Write(buildResponse(response_string))
 }
 
-func buildResponse(slice_of_times []string) []byte {
+func buildResponse(response interface{}) []byte {
 
-	json_encoded_times, err := json.Marshal(slice_of_times)
+	resp, err := json.Marshal(response)
 	if err != nil {
 
 	}
-	return json_encoded_times
+	return resp
 }

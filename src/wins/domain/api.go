@@ -1,89 +1,85 @@
 package domain
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
 	"time"
+
+	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
-type MyWinsAPI struct{}
+type Entry struct {
+	ID   bson.ObjectId `json:"id" bson:"_id"`
+	Time int64         `json:"time" bson:"time"`
+}
 
-var api *MyWinsAPI
+func NewEntry() *Entry {
+	entry := new(Entry)
+	entry.ID = bson.NewObjectId()
+	entry.Time = time.Now().Unix()
+	return entry
+}
 
-func NewApi() *MyWinsAPI {
-	if api != nil {
-		return api
+type DBInfo struct {
+	DB       string
+	WinColl  string
+	FailColl string
+}
+
+func NewDBInfo(db, winColl, failColl string) *DBInfo {
+	return &DBInfo{
+		DB:       db,
+		WinColl:  winColl,
+		FailColl: failColl,
 	}
+}
+
+type MyWinsAPI struct {
+	session *mgo.Session
+	dbInfo  *DBInfo
+}
+
+func NewApi(session *mgo.Session, dbInfo *DBInfo) *MyWinsAPI {
 	api := new(MyWinsAPI)
+	api.session = session
+	api.dbInfo = dbInfo
 	return api
 }
 
-func (api *MyWinsAPI) FindAllWins() (*win, error) {
-
-	wins, err := readFileToDomain()
+func (api *MyWinsAPI) FindAllWins() ([]*Entry, error) {
+	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.WinColl)
+	var wins []*Entry
+	err := collection.Find(nil).All(&wins)
+	if err != nil {
+		log.Println(err)
+	}
 	return wins, err
 }
 
-func (api *MyWinsAPI) AddWin() error {
-	wins, err := readFileToDomain()
+func (api *MyWinsAPI) FindAllFails() ([]*Entry, error) {
+	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.FailColl)
+	var fails []*Entry
+	err := collection.Find(nil).All(&fails)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
-	wins.Success = append(wins.Success, time.Now().Format(time.RFC3339))
-	err = writeDomainToFile(wins)
-	if err != nil {
-		return err
-	}
+	return fails, err
+}
 
-	return nil
+func (api *MyWinsAPI) AddWin() error {
+	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.WinColl)
+	err := collection.Insert(NewEntry())
+	if err != nil {
+		log.Println(err)
+	}
+	return err
 }
 
 func (api *MyWinsAPI) AddFail() error {
-	wins, err := readFileToDomain()
+	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.FailColl)
+	err := collection.Insert(NewEntry())
 	if err != nil {
-		return err
+		log.Println(err)
 	}
-	wins.Fails = append(wins.Fails, time.Now().Format(time.RFC3339))
-	err = writeDomainToFile(wins)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func readFileToDomain() (*win, error) {
-	absPath, _ := filepath.Abs("files/wins.json")
-	jsonFile, err := os.Open(absPath)
-
-	if err != nil {
-		log.Print("Error when trying to open json file", err.Error())
-		return nil, err
-	}
-
-	wins := new(win)
-	jsonParser := json.NewDecoder(jsonFile)
-	if err = jsonParser.Decode(&wins); err != nil {
-		log.Print("Error on parsing json file", err.Error())
-		return nil, err
-	}
-	return wins, nil
-}
-
-func writeDomainToFile(w *win) error {
-	serialized_wins, err := json.Marshal(w)
-	if err != nil {
-		return err
-	}
-	absPath, _ := filepath.Abs("files/wins.json")
-	err = ioutil.WriteFile(absPath, serialized_wins, 0644)
-	if err != nil {
-		log.Print("Could not write on the file", err.Error())
-		return err
-	}
-
-	return nil
+	return err
 }
