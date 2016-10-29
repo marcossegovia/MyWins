@@ -2,3 +2,4 @@ vendor/*/
 src/src
 files/*
 bin
+.env
