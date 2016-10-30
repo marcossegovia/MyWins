@@ -1,42 +1,16 @@
 ## Prod/Staging
 
-FROM alpine:latest
-
-ENV GOPATH /go
-
-RUN apk add --update git go make && \
-    git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
-    go get github.com/Masterminds/glide &&\
-    cd /go/src/github.com/Masterminds/glide &&\
-    make install &&\
-    cd /go/src/github.com/MarcosSegovia/MyWins &&\
-    glide install &&\
-    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
-    go build -o /mywins *.go &&\
-    apk del go git &&\
-    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
-    rm -rf /go
-
-ENV MONGO_HOST = localhost
-ENV MONGO_AUTH_DATABASE = mywins
-ENV MONGO_USER = mywinsAdmin
-ENV MONGO_PASS = winsPass
-ENV MONGO_MYWINS_DATABASE = mywins
-ENV MONGO_WINS_COLLECTION = wins
-ENV MONGO_FAILS_COLLECTION = fails
-
-EXPOSE 8080
-CMD ["/mywins"]
-
-## Local Development
-
 #FROM alpine:latest
+#MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
 #
 #ENV GOPATH /go
+#ENV DB_HOST localhost
+#ENV DB_DBNAME mywins
+#ENV DB_WINS_COLLECTION wins
+#ENV DB_FAILS_COLLECTION fails
 #
-#COPY . /go/src/github.com/MarcosSegovia/MyWins
-#
-#RUN apk add --update git go make &&\
+#RUN apk add --update git go make && \
+#    git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
 #    go get github.com/Masterminds/glide &&\
 #    cd /go/src/github.com/Masterminds/glide &&\
 #    make install &&\
@@ -44,9 +18,39 @@ CMD ["/mywins"]
 #    glide install &&\
 #    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
 #    go build -o /mywins *.go &&\
-#    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
 #    apk del go git &&\
+#    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
 #    rm -rf /go
+#
 #
 #EXPOSE 8080
 #CMD ["/mywins"]
+
+## Local Development
+
+FROM alpine:latest
+MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
+
+ENV GOPATH /go
+
+ENV DB_HOST localhost
+ENV DB_DBNAME mywins
+ENV DB_WINS_COLLECTION wins
+ENV DB_FAILS_COLLECTION fails
+
+COPY . /go/src/github.com/MarcosSegovia/MyWins
+
+RUN apk add --update git go make &&\
+    go get github.com/Masterminds/glide &&\
+    cd /go/src/github.com/Masterminds/glide &&\
+    make install &&\
+    cd /go/src/github.com/MarcosSegovia/MyWins &&\
+    glide install &&\
+    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
+    go build -o /mywins *.go &&\
+    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
+    apk del go git &&\
+    rm -rf /go
+
+EXPOSE 8080
+CMD ["/mywins"]

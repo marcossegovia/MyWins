@@ -1,10 +1,8 @@
 package domain
 
 import (
-	"log"
 	"time"
 
-	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,66 +18,33 @@ func NewEntry() *Entry {
 	return entry
 }
 
-type DBInfo struct {
-	DB       string
-	WinColl  string
-	FailColl string
-}
-
-func NewDBInfo(db, winColl, failColl string) *DBInfo {
-	return &DBInfo{
-		DB:       db,
-		WinColl:  winColl,
-		FailColl: failColl,
-	}
-}
+var api *MyWinsAPI
 
 type MyWinsAPI struct {
-	session *mgo.Session
-	dbInfo  *DBInfo
+	dbClient PersistenceApiClient
 }
 
-func NewApi(session *mgo.Session, dbInfo *DBInfo) *MyWinsAPI {
-	api := new(MyWinsAPI)
-	api.session = session
-	api.dbInfo = dbInfo
+func NewApi(client PersistenceApiClient) *MyWinsAPI {
+
+	if api != nil {
+		return api
+	}
+	api := &MyWinsAPI{client}
 	return api
 }
 
 func (api *MyWinsAPI) FindAllWins() ([]*Entry, error) {
-	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.WinColl)
-	var wins []*Entry
-	err := collection.Find(nil).All(&wins)
-	if err != nil {
-		log.Println(err)
-	}
-	return wins, err
+	return api.dbClient.GetWins()
 }
 
 func (api *MyWinsAPI) FindAllFails() ([]*Entry, error) {
-	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.FailColl)
-	var fails []*Entry
-	err := collection.Find(nil).All(&fails)
-	if err != nil {
-		log.Println(err)
-	}
-	return fails, err
+	return api.dbClient.GetFails()
 }
 
 func (api *MyWinsAPI) AddWin() error {
-	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.WinColl)
-	err := collection.Insert(NewEntry())
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return api.dbClient.AddWin()
 }
 
 func (api *MyWinsAPI) AddFail() error {
-	collection := api.session.DB(api.dbInfo.DB).C(api.dbInfo.FailColl)
-	err := collection.Insert(NewEntry())
-	if err != nil {
-		log.Println(err)
-	}
-	return err
+	return api.dbClient.AddFail()
 }

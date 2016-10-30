@@ -1,26 +1,26 @@
 package main
 
 import (
-	"github.com/MarcosSegovia/MyWins/src/wins/domain"
+	"net/http"
+
 	"github.com/gorilla/mux"
-	mgo "gopkg.in/mgo.v2"
 )
 
 type Route struct {
 	Name    string
 	Method  string
 	Path    string
-	Handler apiHandlerFunc
+	Handler http.HandlerFunc
 }
 
 type Routes []Route
 
-func NewRouter(mongoDB *mgo.Session, dbInfo *domain.DBInfo) *mux.Router {
+func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
 	for _, singleRoute := range routes {
 
-		router.Methods(singleRoute.Method).Path(singleRoute.Path).Name(singleRoute.Name).Handler(newGeneralHandler(mongoDB, dbInfo, singleRoute.Handler))
+		router.Methods(singleRoute.Method).Path(singleRoute.Path).Name(singleRoute.Name).Handler(singleRoute.Handler)
 	}
 
 	return router
