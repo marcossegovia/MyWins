@@ -1,0 +1,11 @@
+mywins:
+  image: marcossegovia/mywins
+  ports:
+    - 8080:8080
+  volumes:
+    - .:/data/db
+  links:
+    - db:db
+
+db:
+  image: mongo
