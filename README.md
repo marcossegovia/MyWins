@@ -37,3 +37,8 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 3. Run the docker-compose file like the following `docker-compose up -d mywins`
 4. You will see how Docker will get a free port to expose the server: so run a `docker ps` and you'll see the app running on the 0.0.0.0:{port}
 
+##Roadmap
+
+When reaching stability to release the v1.0, MyWins is going to push forward and provide friendly frontend clients to consume from different devices.
+
+iOS app is going to take place to be able to directly get track of your current MyWins streaks !
