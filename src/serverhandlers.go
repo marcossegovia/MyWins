@@ -7,10 +7,38 @@ import (
 
 	"github.com/MarcosSegovia/MyWins/src/wins/domain"
 	"github.com/MarcosSegovia/MyWins/src/wins/infrastructure/mongo"
+	"github.com/RangelReale/osin"
 )
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Welcome!!!")
+}
+
+func Authorization(w http.ResponseWriter, r *http.Request) {
+	authorizationServer := osin.NewServer(osin.NewServerConfig(), mongo.NewMongoApiClient())
+	resp := authorizationServer.NewResponse()
+	defer resp.Close()
+
+	authorizeRequest := authorizationServer.HandleAuthorizeRequest(resp, r)
+	if authorizeRequest != nil {
+		//LOGIN
+		authorizeRequest.Authorized = true
+		authorizationServer.FinishAuthorizeRequest(resp, r, authorizeRequest)
+	}
+	osin.OutputJSON(resp, w, r)
+}
+
+func AccessToken(w http.ResponseWriter, r *http.Request) {
+	authorizationServer := osin.NewServer(osin.NewServerConfig(), mongo.NewMongoApiClient())
+	resp := authorizationServer.NewResponse()
+	defer resp.Close()
+
+	accessRequest := authorizationServer.HandleAccessRequest(resp, r)
+	if accessRequest != nil {
+		accessRequest.Authorized = true
+		authorizationServer.FinishAccessRequest(resp, r, accessRequest)
+	}
+	osin.OutputJSON(resp, w, r)
 }
 
 func GetAllWins(w http.ResponseWriter, r *http.Request) {

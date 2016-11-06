@@ -27,6 +27,8 @@ func NewRouter() *mux.Router {
 }
 
 var routes = Routes{
+	Route{"Login into MyWins", "GET", "/authorize", Authorization},
+	Route{"Get Access token", "POST", "/token", AccessToken},
 	Route{"Get Wins", "GET", "/wins", GetAllWins},
 	Route{"Get Wins", "GET", "/fails", GetAllFails},
 	Route{"Post Win", "POST", "/wins/add", AddWin},

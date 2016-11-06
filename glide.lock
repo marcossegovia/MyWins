@@ -1,12 +1,16 @@
-hash: 9f7b6e9f47e547a3fb5bf2bfd3769f979a9c278f703b4ff94e3fb211c8dc3e15
-updated: 2016-10-26T21:44:29.677233982-04:00
+hash: 729eb5d939e9310457104ba892c5f87ccb9746e91a4e5eae07667c1784211bc6
+updated: 2016-11-05T18:09:14.668925117+01:00
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 0eeaf8392f5b04950925b8a69fe70f110fa7cbfc
 - name: github.com/joho/godotenv
-  version: 4ed13390c0acd2ff4e371e64d8b97c8954138243
+  version: a01a834e1654b4c9ca5b3ad05159445cc9c7ad08
+- name: github.com/pborman/uuid
+  version: a97ce2ca70fa5a848076093f05e639a89ca34d06
+- name: github.com/RangelReale/osin
+  version: 839b9f181ce80c6118c981a3f636927b3bb4f3a7
 - name: gopkg.in/mgo.v2
   version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
   subpackages:

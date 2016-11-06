@@ -5,3 +5,6 @@ import:
 - package: github.com/joho/godotenv
   version: ^1.0.0
 - package: gopkg.in/mgo.v2
+- package: github.com/RangelReale/osin
+- package: github.com/pborman/uuid
+  version: ^1.0.0
