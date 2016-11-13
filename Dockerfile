@@ -4,7 +4,6 @@
 #MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
 #
 #ENV GOPATH /go
-#ENV DB_HOST localhost
 #ENV DB_DBNAME mywins
 #ENV DB_WINS_COLLECTION wins
 #ENV DB_FAILS_COLLECTION fails
@@ -33,7 +32,6 @@ MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
 
 ENV GOPATH /go
 
-ENV DB_HOST localhost
 ENV DB_DBNAME mywins
 ENV DB_WINS_COLLECTION wins
 ENV DB_FAILS_COLLECTION fails
@@ -53,4 +51,5 @@ RUN apk add --update git go make &&\
     rm -rf /go
 
 EXPOSE 8080
+EXPOSE 8081
 CMD ["/mywins"]

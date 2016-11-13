@@ -25,6 +25,9 @@ func Authorization(w http.ResponseWriter, r *http.Request) {
 		authorizeRequest.Authorized = true
 		authorizationServer.FinishAuthorizeRequest(resp, r, authorizeRequest)
 	}
+	if resp.IsError && resp.InternalError != nil {
+		fmt.Printf("ERROR: %s\n", resp.InternalError)
+	}
 	osin.OutputJSON(resp, w, r)
 }
 
@@ -34,9 +37,13 @@ func AccessToken(w http.ResponseWriter, r *http.Request) {
 	defer resp.Close()
 
 	accessRequest := authorizationServer.HandleAccessRequest(resp, r)
+
 	if accessRequest != nil {
 		accessRequest.Authorized = true
 		authorizationServer.FinishAccessRequest(resp, r, accessRequest)
+	}
+	if resp.IsError && resp.InternalError != nil {
+		fmt.Printf("ERROR: %s\n", resp.InternalError)
 	}
 	osin.OutputJSON(resp, w, r)
 }

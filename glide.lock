@@ -1,5 +1,5 @@
-hash: 729eb5d939e9310457104ba892c5f87ccb9746e91a4e5eae07667c1784211bc6
-updated: 2016-11-05T18:09:14.668925117+01:00
+hash: c13d76c530bdb48e9be186290f465654b1a66b44460e257508504b9acf23bd66
+updated: 2016-11-06T13:13:30.610272631+01:00
 imports:
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
@@ -11,6 +11,8 @@ imports:
   version: a97ce2ca70fa5a848076093f05e639a89ca34d06
 - name: github.com/RangelReale/osin
   version: 839b9f181ce80c6118c981a3f636927b3bb4f3a7
+- name: github.com/RangelReale/osincli
+  version: fababb0555f21315d1a34af6615a16eaab44396b
 - name: gopkg.in/mgo.v2
   version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
   subpackages:

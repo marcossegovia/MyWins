@@ -7,8 +7,13 @@ import (
 
 func main() {
 
-	router := NewRouter()
-	e := http.ListenAndServe(":8080", router)
+	BootstrapClient()
+
+	serverRouter := NewServerRouter()
+	clientRouter := NewClientRouter()
+
+	go http.ListenAndServe(":8081", clientRouter)
+	e := http.ListenAndServe(":8080", serverRouter)
 
 	if e != nil {
 

@@ -8,3 +8,4 @@ import:
 - package: github.com/RangelReale/osin
 - package: github.com/pborman/uuid
   version: ^1.0.0
+- package: github.com/RangelReale/osincli

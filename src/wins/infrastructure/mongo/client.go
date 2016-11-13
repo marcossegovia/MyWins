@@ -2,11 +2,11 @@ package mongo
 
 import (
 	"github.com/joho/godotenv"
-	"os"
 	"time"
 	"strings"
 	"gopkg.in/mgo.v2"
 	"log"
+	"os"
 )
 
 const (
@@ -43,6 +43,12 @@ func NewMongoClient() *MongoClient {
 	mywinsDatabase := os.Getenv("DB_DBNAME")
 	winsCollection := os.Getenv("DB_WINS_COLLECTION")
 	failsCollection := os.Getenv("DB_FAILS_COLLECTION")
+	//mongoDBHost := "0.0.0.0"
+	//mongoDBPort := "32768"
+	//mywinsDatabase := "mywins"
+	//winsCollection := "wins"
+	//failsCollection := "fails"
+
 	timeout := time.Duration(40 * time.Second)
 	host := []string{mongoDBHost}
 	host = append(host, ":")

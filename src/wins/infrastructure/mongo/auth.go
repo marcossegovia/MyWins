@@ -22,8 +22,8 @@ func (client MongoApiClient) GetClient(id string) (osin.Client, error) {
 	session := client.dbClient.Session.Copy()
 	defer session.Close()
 
-	clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
 	osinClient := new(osin.DefaultClient)
+	clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
 	err := clients.FindId(id).One(osinClient)
 
 	return osinClient, err
@@ -43,7 +43,7 @@ func (client MongoApiClient) SaveAuthorize(data *osin.AuthorizeData) error {
 	defer session.Close()
 
 	authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
-	_, err := authorizations.UpsertId(data.Code, data)
+	_, err := authorizations.UpsertId(data.Code, AuthorizeDataFromOSIN(data))
 	return err
 }
 
@@ -51,10 +51,14 @@ func (client MongoApiClient) LoadAuthorize(code string) (*osin.AuthorizeData, er
 	session := client.dbClient.Session.Copy()
 	defer session.Close()
 
+	var authData AuthorizeData
 	authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
-	authData := new(osin.AuthorizeData)
-	err := authorizations.FindId(code).One(authData)
-	return authData, err
+	err := authorizations.FindId(code).One(&authData)
+	if err != nil {
+		return nil, err
+	}
+	pam, err := authData.AuthorizeDataToOSIN(client)
+	return pam, err
 }
 
 func (client MongoApiClient) RemoveAuthorize(code string) error {
@@ -70,7 +74,7 @@ func (client MongoApiClient) SaveAccess(data *osin.AccessData) error {
 	defer session.Close()
 
 	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	_, err := accesses.UpsertId(data.AccessToken, data)
+	_, err := accesses.UpsertId(data.AccessToken, AccessDataFromOSIN(data))
 	return err
 }
 
@@ -78,10 +82,13 @@ func (client MongoApiClient) LoadAccess(token string) (*osin.AccessData, error) 
 	session := client.dbClient.Session.Copy()
 	defer session.Close()
 
+	var accData AccessData
 	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	accData := new(osin.AccessData)
-	err := accesses.FindId(token).One(accData)
-	return accData, err
+	err := accesses.FindId(token).One(&accData)
+	if err != nil {
+		return nil, err
+	}
+	return accData.AccessDataToOSIN(client)
 }
 
 func (client MongoApiClient) RemoveAccess(token string) error {
@@ -96,10 +103,14 @@ func (client MongoApiClient) LoadRefresh(token string) (*osin.AccessData, error)
 	session := client.dbClient.Session.Copy()
 	defer session.Close()
 
+	var accData AccessData
+
 	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	accData := new(osin.AccessData)
-	err := accesses.Find(bson.M{REFRESH_TOKEN: token}).One(accData)
-	return accData, err
+	err := accesses.Find(bson.M{REFRESH_TOKEN: token}).One(&accData)
+	if err != nil {
+		return nil, err
+	}
+	return accData.AccessDataToOSIN(client)
 }
 
 func (client MongoApiClient) RemoveRefresh(token string) error {
@@ -107,8 +118,5 @@ func (client MongoApiClient) RemoveRefresh(token string) error {
 	defer session.Close()
 
 	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	return accesses.Update(bson.M{REFRESH_TOKEN: token}, bson.M{
-		"$unset": bson.M{
-			REFRESH_TOKEN: 1,
-		}})
+	return accesses.Remove(bson.M{REFRESH_TOKEN: token})
 }
