@@ -23,6 +23,7 @@ var serverRoutes = Routes{
 	Route{"Post Win", "POST", "/wins/add", AddWin},
 	Route{"Post Win", "POST", "/fails/add", AddFail},
 	Route{"Hi", "GET", "/", Welcome},
+	Route{"Information Endpoint", "GET", "/info", Information},
 }
 
 var clientRoutes = Routes{

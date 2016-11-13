@@ -48,6 +48,19 @@ func AccessToken(w http.ResponseWriter, r *http.Request) {
 	osin.OutputJSON(resp, w, r)
 }
 
+func Information(w http.ResponseWriter, r *http.Request) {
+	authorizationServer := osin.NewServer(osin.NewServerConfig(), mongo.NewMongoApiClient())
+	resp := authorizationServer.NewResponse()
+	defer resp.Close()
+
+	infoRequest := authorizationServer.HandleInfoRequest(resp, r)
+
+	if infoRequest != nil {
+		authorizationServer.FinishInfoRequest(resp, r, infoRequest)
+	}
+	osin.OutputJSON(resp, w, r)
+}
+
 func GetAllWins(w http.ResponseWriter, r *http.Request) {
 	api := domain.NewApi(mongo.NewMongoApiClient())
 	wins, err := api.FindAllWins()
