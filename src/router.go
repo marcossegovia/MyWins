@@ -27,7 +27,8 @@ var serverRoutes = Routes{
 }
 
 var clientRoutes = Routes{
-	Route{"Login into MyWins", "GET", "/", Login},
+	Route{"Get Login into MyWins", "GET", "/login", Login},
+	Route{"Post Login into MyWins", "POST", "/login", LoginPost},
 	Route{"Get Access token", "GET", "/accesstoken", AuthForAccessToken},
 }
 

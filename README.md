@@ -41,11 +41,15 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 MyWins is based in the [OAuth 2.0](https://oauth.net/2/) protocol to establish communication with the api provided.
 
 By default I've provided a default client to be able to access the different endpoints in the API.
-To be able to authenticate with MyWins as the DefaultClient you'll two alternatives:
+To be able to authenticate with MyWins as the default client you have two alternatives:
 
-1. Making a GET request to the endpoint `http://localhost:8080/authorize` with the parameters required from the current client. Example: `http://localhost:8080/authorize?client_id=1234&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Faccesstoken&response_type=code`
-    > Remember to url encode your parameters !
-2. Making a GET Request to the endpoint `http://localhost:8081/` and follow the link that would make the authorization request, just like the link above.
+1. Making a GET request to the endpoint `http://localhost:8081/login` and submit the form with your client credentials (`client_id: 1234` `client_secret: abcd`)
+2. Making a POST Request to the endpoint `http://localhost:8081/login` with the form parameters in the request body.
+    > Example CURL request
+    ```
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Cache-Control: no-cache" -d 'grant_type=client_credentials&client_id=1234&client_secret=abcd' "http://localhost:8081/login"
+    ```
+
 From now on you'll have access to all the endpoints of the MyWins API by using the provided token:
 
 ![Token Response Example](/token_example.png)
