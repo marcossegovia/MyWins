@@ -1,37 +1,9 @@
-## Prod/Staging
-
-#FROM alpine:latest
-#MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
-#
-#ENV GOPATH /go
-#ENV DB_DBNAME mywins
-#ENV DB_WINS_COLLECTION wins
-#ENV DB_FAILS_COLLECTION fails
-#
-#RUN apk add --update git go make && \
-#    git clone https://github.com/MarcosSegovia/MyWins.git /go/src/github.com/MarcosSegovia/MyWins &&\
-#    go get github.com/Masterminds/glide &&\
-#    cd /go/src/github.com/Masterminds/glide &&\
-#    make install &&\
-#    cd /go/src/github.com/MarcosSegovia/MyWins &&\
-#    glide install &&\
-#    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
-#    go build -o /mywins *.go &&\
-#    apk del go git &&\
-#    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
-#    rm -rf /go
-#
-#
-#EXPOSE 8080
-#CMD ["/mywins"]
-
-## Local Development
-
 FROM alpine:latest
 MAINTAINER Marcos Segovia <velozmarkdrea@gmail.com>
 
 ENV GOPATH /go
 
+ENV app_env prod
 ENV DB_DBNAME mywins
 ENV DB_WINS_COLLECTION wins
 ENV DB_FAILS_COLLECTION fails

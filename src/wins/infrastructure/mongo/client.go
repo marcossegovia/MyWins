@@ -1,12 +1,10 @@
 package mongo
 
 import (
-	"github.com/joho/godotenv"
 	"time"
 	"strings"
 	"gopkg.in/mgo.v2"
 	"log"
-	"os"
 )
 
 const (
@@ -17,7 +15,16 @@ const (
 
 var (
 	client *MongoClient
+	mongoConfiguration *MongoConfiguration
 )
+
+type MongoConfiguration struct {
+	MongoHost       string
+	MongoPort       string
+	MyWinsDatabase  string
+	WinsCollection  string
+	FailsCollection string
+}
 
 type MongoClient struct {
 	Session *mgo.Session
@@ -30,6 +37,10 @@ type DbInfo struct {
 	FailColl string
 }
 
+func InitMongoEnv(configuration *MongoConfiguration) {
+	mongoConfiguration = configuration
+}
+
 func NewMongoClient() *MongoClient {
 
 	if client != nil {
@@ -37,22 +48,10 @@ func NewMongoClient() *MongoClient {
 		return client
 	}
 
-	godotenv.Load()
-	mongoDBHost := os.Getenv("DB_PORT_27017_TCP_ADDR")
-	mongoDBPort := os.Getenv("DB_PORT_27017_TCP_PORT")
-	mywinsDatabase := os.Getenv("DB_DBNAME")
-	winsCollection := os.Getenv("DB_WINS_COLLECTION")
-	failsCollection := os.Getenv("DB_FAILS_COLLECTION")
-	//mongoDBHost := "0.0.0.0"
-	//mongoDBPort := "32768"
-	//mywinsDatabase := "mywins"
-	//winsCollection := "wins"
-	//failsCollection := "fails"
-
 	timeout := time.Duration(40 * time.Second)
-	host := []string{mongoDBHost}
+	host := []string{mongoConfiguration.MongoHost}
 	host = append(host, ":")
-	host = append(host, mongoDBPort)
+	host = append(host, mongoConfiguration.MongoPort)
 	hostName := strings.Join(host, "")
 	mongoSession, err := mgo.DialWithTimeout(hostName, timeout)
 
@@ -72,7 +71,7 @@ func NewMongoClient() *MongoClient {
 
 	client := &MongoClient{
 		Session: mongoSession,
-		DbInfo: &DbInfo{mywinsDatabase, winsCollection, failsCollection},
+		DbInfo: &DbInfo{mongoConfiguration.MyWinsDatabase, mongoConfiguration.WinsCollection, mongoConfiguration.FailsCollection},
 	}
 	return client
 }
@@ -81,7 +80,7 @@ func defineIndex() mgo.Index {
 
 	return mgo.Index{
 		Key:        []string{REFRESH_TOKEN},
-		Unique:     false, // refreshtoken is sometimes empty
+		Unique:     false,
 		DropDups:   false,
 		Background: true,
 		Sparse:     true,

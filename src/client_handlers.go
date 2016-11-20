@@ -1,25 +1,25 @@
 package main
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 
-	"github.com/RangelReale/osin"
 	"github.com/MarcosSegovia/MyWins/src/wins/infrastructure/mongo"
+	"github.com/RangelReale/osin"
 	"github.com/RangelReale/osincli"
 )
 
 var (
-	oauthClient *osincli.Client
+	oauthClient      *osincli.Client
 	authorizeRequest *osincli.AuthorizeRequest
 )
 
 func BootstrapClient() {
 	var err error
-	persistence := mongo.NewMongoApiClient();
+	persistence := mongo.NewMongoApiClient()
 	myClient := &osin.DefaultClient{
-		Id: "1234",
-		Secret: "abcd",
+		Id:          "1234",
+		Secret:      "abcd",
 		RedirectUri: "http://localhost:8081/accesstoken",
 	}
 	err = persistence.SetClient("1234", myClient)
@@ -41,7 +41,6 @@ func BootstrapClient() {
 	}
 	authorizeRequest = oauthClient.NewAuthorizeRequest(osincli.CODE)
 }
-
 
 /**
  * Entry point to get the Access Token
