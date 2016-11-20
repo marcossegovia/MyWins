@@ -24,18 +24,34 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 
 ##How to build and run it locally
 
-1. `go build -o bin/mywins src/*.go`
-2. `./bin/mywins`
-3. MyWins will be running on 0.0.0.0:8080
-
-> To be able to check the app functionality you would have to provide a mongodb installation and set the environment variables inside `mongo.go` with your own host and port from your mongodb client.
+1. First you'll have to provide a mongodb running in your local machine. The fastest way is to provide a mongodb container with Docker by typing `docker run -P -d mongo`
+2. We set the mongoDBPort (we can check in which port Docker is providing Mongo service by typing `docker ps`) in the config file `MyWins/config/mongo_dev.yml` like `"mongoDBPort": "32770",`
+3. We build our project to generate the binary `go build -o bin/mywins src/*.go`
+4. We run the binary `./bin/mywins`
+3. MyWins will be running on 0.0.0.0:8080 and 0.0.0.0:8081
 
 ##How to build and run it with Docker locally
 
-1. First uncomment the `Local Development` Dockerfile code and comment the `Production/Staging` one.
-2. Build it by the provided Dockerfile `docker build -t marcossegovia/mywins .`
-3. Run the docker-compose file like the following `docker-compose up -d mywins`
-4. You will see how Docker will get a free port to expose the server: so run a `docker ps` and you'll see the app running on the 0.0.0.0:{port}
+1. Build it with the Dockerfile provided `docker build -t marcossegovia/mywins .`
+2. Run the docker-compose file like the following `docker-compose up -d mywins`
+3. Run a `docker ps` and you'll see the app running on the 0.0.0.0:8080 and 0.0.0.0:8081 and automatically connected to a mongodb container internally with unneeded manual configuration.
+
+##Usage
+
+MyWins is based in the [OAuth 2.0](https://oauth.net/2/) protocol to establish communication with the api provided.
+By default I've provided a default client to be able to access the different endpoints in the API.
+To be able to Authenticate with MyWins as the DefaultClient you'll two alternatives:
+
+1. Make a CURL GET request to the endpoint `http://localhost:8080/authorize` with the parameters required from the current client. Example: `http://localhost:8080/authorize?client_id=1234&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Faccesstoken&response_type=code`
+    > Remember to url encode your parameters !
+2. Make a CURL GET Request to the endpoint `http://localhost:8081/` and follow the link that would make the authorization request, just like the link above.
+3. From now on you'll have access to all the endpoints of the MyWins API by using the provided token:
+
+![Token Response Example](/token_example.png)
+
+Just by adding the Authorization header with the Bearer Token.
+Example CURL request to the endpoint `/wins` using the token of the example:
+`curl -X GET -H "Authorization: Bearer Y_Viqe4xQBW0l-chNPiZqw" -H "Cache-Control: no-cache" "http://localhost:8080/wins"`
 
 ##Roadmap
 
