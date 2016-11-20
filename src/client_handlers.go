@@ -7,7 +7,6 @@ import (
 	"github.com/RangelReale/osin"
 	"github.com/MarcosSegovia/MyWins/src/wins/infrastructure/mongo"
 	"github.com/RangelReale/osincli"
-	"gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -24,34 +23,6 @@ func BootstrapClient() {
 		RedirectUri: "http://localhost:8081/accesstoken",
 	}
 	err = persistence.SetClient("1234", myClient)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	myAuthData := &osin.AuthorizeData{
-		Client:      myClient,
-		Code:        "yvEwEbgH",
-		ExpiresIn:   3600,
-		CreatedAt:   bson.Now(),
-		RedirectUri: "http://localhost:8081/accesstoken",
-	}
-	err = persistence.SaveAuthorize(myAuthData)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	data := &osin.AccessData{
-		Client:        myClient,
-		AuthorizeData: myAuthData,
-		AccessToken:   "9999",
-		RefreshToken:  "r9999",
-		ExpiresIn:     3600,
-		CreatedAt:     bson.Now(),
-	}
-
-	err = persistence.SaveAccess(data)
 
 	if err != nil {
 		fmt.Println(err.Error())
