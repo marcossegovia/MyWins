@@ -15,10 +15,27 @@ type Route struct {
 
 type Routes []Route
 
-func NewRouter() *mux.Router {
+var serverRoutes = Routes{
+	Route{"Login into MyWins", "GET", "/authorize", Authorization},
+	Route{"Get Access token", "POST", "/token", AccessToken},
+	Route{"Get Wins", "GET", "/wins", GetAllWins},
+	Route{"Get Wins", "GET", "/fails", GetAllFails},
+	Route{"Post Win", "POST", "/wins/add", AddWin},
+	Route{"Post Win", "POST", "/fails/add", AddFail},
+	Route{"Hi", "GET", "/", Welcome},
+	Route{"Information Endpoint", "GET", "/info", Information},
+}
+
+var clientRoutes = Routes{
+	Route{"Get Login into MyWins", "GET", "/login", Login},
+	Route{"Post Login into MyWins", "POST", "/login", LoginPost},
+	Route{"Get Access token", "GET", "/accesstoken", AuthForAccessToken},
+}
+
+func NewServerRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
-	for _, singleRoute := range routes {
+	for _, singleRoute := range serverRoutes {
 
 		router.Methods(singleRoute.Method).Path(singleRoute.Path).Name(singleRoute.Name).Handler(singleRoute.Handler)
 	}
@@ -26,10 +43,13 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-var routes = Routes{
-	Route{"Get Wins", "GET", "/wins", GetAllWins},
-	Route{"Get Wins", "GET", "/fails", GetAllFails},
-	Route{"Post Win", "POST", "/wins/add", AddWin},
-	Route{"Post Win", "POST", "/fails/add", AddFail},
-	Route{"Hi", "GET", "/", Welcome},
+func NewClientRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true)
+
+	for _, singleRoute := range clientRoutes {
+
+		router.Methods(singleRoute.Method).Path(singleRoute.Path).Name(singleRoute.Name).Handler(singleRoute.Handler)
+	}
+
+	return router
 }

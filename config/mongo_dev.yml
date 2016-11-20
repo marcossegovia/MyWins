@@ -1,0 +1,7 @@
+{
+	"mongoDBHost": "0.0.0.0",
+	"mongoDBPort": "32770",
+	"mywinsDatabase": "mywins",
+	"winsCollection": "wins",
+	"failsCollection": "fails"
+}
