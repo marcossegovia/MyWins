@@ -73,7 +73,7 @@ func BootstrapClient() {
 
 
 /**
-	Entry point to get the Access Token
+ * Entry point to get the Access Token
  */
 func Login(w http.ResponseWriter, r *http.Request) {
 
@@ -83,10 +83,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
-	Exchanges the Auth Token from the AuthorizeRequest to an AccessToken
+ * Exchanges the Auth Token from the AuthorizeRequest to an AccessToken
  */
 func AuthForAccessToken(w http.ResponseWriter, r *http.Request) {
-	// parse a token request
 	authorizeRequestData, err := authorizeRequest.HandleRequest(r)
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf("ERROR: %s\n", err)))
@@ -94,13 +93,12 @@ func AuthForAccessToken(w http.ResponseWriter, r *http.Request) {
 	}
 	accessTokenRequest := oauthClient.NewAccessRequest(osincli.AUTHORIZATION_CODE, authorizeRequestData)
 
-	// exchange the authorize token for the access token
-	ad, err := accessTokenRequest.GetToken()
+	accessData, err := accessTokenRequest.GetToken()
 	if err != nil {
 		w.Write([]byte(fmt.Sprintf("ERROR: %s\n", err)))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(buildResponse(ad.ResponseData))
+	w.Write(buildResponse(accessData.ResponseData))
 }
