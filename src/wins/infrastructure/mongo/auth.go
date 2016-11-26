@@ -1,122 +1,134 @@
 package mongo
 
 import (
-	"github.com/RangelReale/osin"
-	"gopkg.in/mgo.v2/bson"
+        "github.com/RangelReale/osin"
+        "gopkg.in/mgo.v2/bson"
 )
 
 const (
-	CLIENT_COL = "clients"
-	AUTHORIZE_COL = "authorizations"
+        CLIENT_COL = "clients"
+        AUTHORIZE_COL = "authorizations"
 )
 
-func (client MongoApiClient) Clone() osin.Storage {
-	return client
+// Clone implementation of osin.Storage.Clone using MongoDB
+func (client MongoAPIClient) Clone() osin.Storage {
+        return client
 }
 
-func (client MongoApiClient) Close() {
+// Close implementation of osin.Storage.Close using MongoDB
+func (client MongoAPIClient) Close() {
 
 }
 
-func (client MongoApiClient) GetClient(id string) (osin.Client, error) {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// GetClient implementation of osin.Storage.GetClient using MongoDB
+func (client MongoAPIClient) GetClient(id string) (osin.Client, error) {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	osinClient := new(osin.DefaultClient)
-	clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
-	err := clients.FindId(id).One(osinClient)
+        osinClient := new(osin.DefaultClient)
+        clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
+        err := clients.FindId(id).One(osinClient)
 
-	return osinClient, err
+        return osinClient, err
 }
 
-func (client MongoApiClient) SetClient(id string, osinClient osin.Client) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// SetClient implementation of osin.Storage.SetClient using MongoDB
+func (client MongoAPIClient) SetClient(id string, osinClient osin.Client) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
-	_, err := clients.UpsertId(id, osinClient)
-	return err
+        clients := session.DB(TOKEN_DB_NAME).C(CLIENT_COL)
+        _, err := clients.UpsertId(id, osinClient)
+        return err
 }
 
-func (client MongoApiClient) SaveAuthorize(data *osin.AuthorizeData) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// SaveAuthorize implementation of osin.Storage.SaveAuthorize using MongoDB
+func (client MongoAPIClient) SaveAuthorize(data *osin.AuthorizeData) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
-	_, err := authorizations.UpsertId(data.Code, AuthorizeDataFromOSIN(data))
-	return err
+        authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
+        _, err := authorizations.UpsertId(data.Code, AuthorizeDataFromOSIN(data))
+        return err
 }
 
-func (client MongoApiClient) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// LoadAuthorize implementation of osin.Storage.LoadAuthorize using MongoDB
+func (client MongoAPIClient) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	var authData AuthorizeData
-	authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
-	err := authorizations.FindId(code).One(&authData)
-	if err != nil {
-		return nil, err
-	}
-	pam, err := authData.AuthorizeDataToOSIN(client)
-	return pam, err
+        var authData AuthorizeData
+        authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
+        err := authorizations.FindId(code).One(&authData)
+        if err != nil {
+                return nil, err
+        }
+        pam, err := authData.AuthorizeDataToOSIN(client)
+        return pam, err
 }
 
-func (client MongoApiClient) RemoveAuthorize(code string) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// RemoveAuthorize implementation of osin.Storage.RemoveAuthorize using MongoDB
+func (client MongoAPIClient) RemoveAuthorize(code string) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
-	return authorizations.RemoveId(code)
+        authorizations := session.DB(TOKEN_DB_NAME).C(AUTHORIZE_COL)
+        return authorizations.RemoveId(code)
 }
 
-func (client MongoApiClient) SaveAccess(data *osin.AccessData) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// SaveAccess implementation of osin.Storage.SaveAccess using MongoDB
+func (client MongoAPIClient) SaveAccess(data *osin.AccessData) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	_, err := accesses.UpsertId(data.AccessToken, AccessDataFromOSIN(data))
-	return err
+        accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
+        _, err := accesses.UpsertId(data.AccessToken, AccessDataFromOSIN(data))
+        return err
 }
 
-func (client MongoApiClient) LoadAccess(token string) (*osin.AccessData, error) {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// LoadAccess implementation of osin.Storage.LoadAccess using MongoDB
+func (client MongoAPIClient) LoadAccess(token string) (*osin.AccessData, error) {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	var accData AccessData
-	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	err := accesses.FindId(token).One(&accData)
-	if err != nil {
-		return nil, err
-	}
-	return accData.AccessDataToOSIN(client)
+        var accData AccessData
+        accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
+        err := accesses.FindId(token).One(&accData)
+        if err != nil {
+                return nil, err
+        }
+        return accData.AccessDataToOSIN(client)
 }
 
-func (client MongoApiClient) RemoveAccess(token string) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// RemoveAccess implementation of osin.Storage.RemoveAccess using MongoDB
+func (client MongoAPIClient) RemoveAccess(token string) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	return accesses.RemoveId(token)
+        accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
+        return accesses.RemoveId(token)
 }
 
-func (client MongoApiClient) LoadRefresh(token string) (*osin.AccessData, error) {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// LoadRefresh implementation of osin.Storage.LoadRefresh using MongoDB
+func (client MongoAPIClient) LoadRefresh(token string) (*osin.AccessData, error) {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	var accData AccessData
+        var accData AccessData
 
-	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	err := accesses.Find(bson.M{REFRESH_TOKEN: token}).One(&accData)
-	if err != nil {
-		return nil, err
-	}
-	return accData.AccessDataToOSIN(client)
+        accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
+        err := accesses.Find(bson.M{REFRESH_TOKEN: token}).One(&accData)
+        if err != nil {
+                return nil, err
+        }
+        return accData.AccessDataToOSIN(client)
 }
 
-func (client MongoApiClient) RemoveRefresh(token string) error {
-	session := client.dbClient.Session.Copy()
-	defer session.Close()
+// RemoveRefresh implementation of osin.Storage.RemoveRefresh using MongoDB
+func (client MongoAPIClient) RemoveRefresh(token string) error {
+        session := client.dbClient.Session.Copy()
+        defer session.Close()
 
-	accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
-	return accesses.Remove(bson.M{REFRESH_TOKEN: token})
+        accesses := session.DB(TOKEN_DB_NAME).C(ACCESS_COL)
+        return accesses.Remove(bson.M{REFRESH_TOKEN: token})
 }
