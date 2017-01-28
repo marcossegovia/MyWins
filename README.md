@@ -5,7 +5,6 @@
 <p align="center">
 	<img alt="MyWins" src="logo.png?raw=true">
 </p>
----
 
 MyWins is a service to track your daily routines whatever it is, just to cheer you up in the pursuit of your dreams.
 
