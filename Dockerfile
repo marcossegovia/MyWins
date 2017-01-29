@@ -10,7 +10,7 @@ ENV DB_FAILS_COLLECTION fails
 
 COPY . /go/src/github.com/MarcosSegovia/MyWins
 
-RUN apk add --update git go make &&\
+RUN apk add --update git go make musl-dev &&\
     go get github.com/Masterminds/glide &&\
     cd /go/src/github.com/Masterminds/glide &&\
     make install &&\
