@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/MarcosSegovia/MyWins/src/wins/infrastructure/mongo"
+	"github.com/marcossegovia/MyWins/src/wins/infrastructure/mongo"
 	"github.com/RangelReale/osin"
 	"github.com/RangelReale/osincli"
 )

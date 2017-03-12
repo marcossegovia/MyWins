@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/MarcosSegovia/MyWins/src/wins/infrastructure/mongo"
+	"github.com/marcossegovia/MyWins/src/wins/infrastructure/mongo"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
@@ -12,7 +12,7 @@ import (
 // SetDevEnvironment sets persistence system with development variables.
 func SetDevEnvironment() {
 	viper.SetConfigName("mongo_dev")
-	viper.AddConfigPath("$GOPATH/src/github.com/MarcosSegovia/MyWins/config")
+	viper.AddConfigPath("$GOPATH/src/github.com/marcossegovia/MyWins/config")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))

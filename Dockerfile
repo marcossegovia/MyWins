@@ -8,17 +8,17 @@ ENV DB_DBNAME mywins
 ENV DB_WINS_COLLECTION wins
 ENV DB_FAILS_COLLECTION fails
 
-COPY . /go/src/github.com/MarcosSegovia/MyWins
+COPY . /go/src/github.com/marcossegovia/MyWins
 
 RUN apk add --update git go make musl-dev &&\
     go get github.com/Masterminds/glide &&\
     cd /go/src/github.com/Masterminds/glide &&\
     make install &&\
-    cd /go/src/github.com/MarcosSegovia/MyWins &&\
+    cd /go/src/github.com/marcossegovia/MyWins &&\
     glide install &&\
-    cd /go/src/github.com/MarcosSegovia/MyWins/src &&\
+    cd /go/src/github.com/marcossegovia/MyWins/src &&\
     go build -o /mywins *.go &&\
-    mv /go/src/github.com/MarcosSegovia/MyWins/files /files &&\
+    mv /go/src/github.com/marcossegovia/MyWins/files /files &&\
     apk del go git &&\
     rm -rf /go
 

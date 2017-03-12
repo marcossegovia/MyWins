@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/MarcosSegovia/MyWins.svg?branch=master)](https://travis-ci.org/MarcosSegovia/MyWins)
-[![Go Report Card](https://goreportcard.com/badge/github.com/MarcosSegovia/MyWins)](https://goreportcard.com/report/github.com/MarcosSegovia/MyWins)
-[![GitHub release](https://img.shields.io/badge/release-v0.2-blue.svg)](https://github.com/MarcosSegovia/MyWins/releases/tag/v0.2)
+[![Build Status](https://travis-ci.org/marcossegovia/MyWins.svg?branch=master)](https://travis-ci.org/marcossegovia/MyWins)
+[![Go Report Card](https://goreportcard.com/badge/github.com/marcossegovia/MyWins)](https://goreportcard.com/report/github.com/marcossegovia/MyWins)
+[![GitHub release](https://img.shields.io/badge/release-v0.2-blue.svg)](https://github.com/marcossegovia/MyWins/releases/tag/v0.2)
 
 <p align="center">
 	<img alt="MyWins" src="logo.png?raw=true">
@@ -16,7 +16,7 @@ MyWins is a service to track your daily routines whatever it is, just to cheer y
 
 ##Installation
 
-1. You just `go get github.com/MarcosSegovia/MyWins` so you'll get the repository inside your go workspace.
+1. You just `go get github.com/marcossegovia/MyWins` so you'll get the repository inside your go workspace.
 2. Be sure to get [glide](https://github.com/Masterminds/glide) to be able to get dependencies. 
 3. If so, then run `glide install`
 

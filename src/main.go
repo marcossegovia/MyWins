@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/MarcosSegovia/MyWins/src/wins/config"
+	"github.com/marcossegovia/MyWins/src/wins/config"
 )
 
 func main() {

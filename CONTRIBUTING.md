@@ -3,7 +3,7 @@
 ### In short
 
 * Make sure you have properly installed MyWins.
-* Make sure your issue was not [reported](https://github.com/MarcosSegovia/MyWins/issues) before.
+* Make sure your issue was not [reported](https://github.com/marcossegovia/MyWins/issues) before.
 
 ### Detailed explanation
 

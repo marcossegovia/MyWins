@@ -3,7 +3,7 @@ package mongo
 import (
 	"log"
 
-	"github.com/MarcosSegovia/MyWins/src/wins/domain"
+	"github.com/marcossegovia/MyWins/src/wins/domain"
 )
 
 // MongoAPIClient is the instance that implements MyWins PersistenceAPIClient.
